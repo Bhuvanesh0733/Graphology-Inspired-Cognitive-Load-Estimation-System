@@ -1,0 +1,54 @@
+{
+  "model_name": "XGBoost",
+  "accuracy": 0.4131,
+  "f1_score": 0.3943,
+  "classes": [
+    "HIGH",
+    "LOW",
+    "MEDIUM"
+  ],
+  "feature_names": [
+    "pressure_mean",
+    "pressure_variance",
+    "ink_density",
+    "slant_mean_angle",
+    "slant_deviation",
+    "slant_skewness",
+    "letter_spacing_mean",
+    "letter_spacing_var",
+    "baseline_deviation",
+    "form_regularity",
+    "tremor_index",
+    "pen_lift_fragmentation",
+    "letter_height_var",
+    "pixel_entropy",
+    "zone_ratio"
+  ],
+  "feature_groups": {
+    "Pressure": [
+      "pressure_mean",
+      "pressure_variance",
+      "ink_density"
+    ],
+    "Slant": [
+      "slant_mean_angle",
+      "slant_deviation",
+      "slant_skewness"
+    ],
+    "Spacing": [
+      "letter_spacing_mean",
+      "letter_spacing_var",
+      "baseline_deviation"
+    ],
+    "Form/Shape": [
+      "form_regularity",
+      "tremor_index",
+      "pen_lift_fragmentation",
+      "letter_height_var",
+      "pixel_entropy",
+      "zone_ratio"
+    ]
+  },
+  "n_train": 92254,
+  "n_test": 23064
+}

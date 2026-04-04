@@ -1,0 +1,7 @@
+iam_words/ 
+data/dataset.csv 
+data/predictions.db 
+model/*.pkl 
+static/uploads/ 
+__pycache__/ 
+*.pyc 

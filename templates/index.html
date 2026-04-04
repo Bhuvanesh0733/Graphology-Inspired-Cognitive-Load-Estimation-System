@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cognitive Load Estimator</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <div class="nav-brand">
+      <span class="nav-icon">&#9998;</span>
+      Cognitive Load Estimator
+    </div>
+    <div class="nav-status">
+      {% if model_ready %}
+        <span class="dot green"></span>
+        <span>{{ model_info.get('model_name','Model') }} &nbsp;·&nbsp; Acc: {{ model_info.get('accuracy','—') }} &nbsp;·&nbsp; {{ model_info.get('feature_names')|length }} graphological features</span>
+      {% else %}
+        <span class="dot red"></span>
+        <span>Model not found — run <code>python train_model.py</code></span>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+<main class="container">
+
+  <div class="hero">
+    <h1>Handwriting Graphological Analysis</h1>
+    <p>Estimates cognitive load via graphological patterns: pen pressure, slant consistency, letter spacing, form regularity, and tremor markers.</p>
+  </div>
+
+  <!-- Pipeline -->
+  <div class="pipeline">
+    <span class="ps" id="ps0">Image upload</span><span class="pa">→</span>
+    <span class="ps" id="ps1">Preprocessing</span><span class="pa">→</span>
+    <span class="ps" id="ps2">Graphological extraction</span><span class="pa">→</span>
+    <span class="ps" id="ps3">RF / XGBoost</span><span class="pa">→</span>
+    <span class="ps" id="ps4">Task-aware logic</span><span class="pa">→</span>
+    <span class="ps" id="ps5">Prediction</span>
+  </div>
+
+  <div class="main-grid">
+
+    <!-- LEFT: inputs -->
+    <div class="left-col">
+
+      <div class="card">
+        <div class="card-label">Handwriting sample</div>
+        <div class="upload-zone" id="uploadZone">
+          <input type="file" id="fileInput" accept="image/*" onchange="onFileChange(this)">
+          <div id="uploadHint">
+            <div class="u-icon">&#9998;</div>
+            <div class="u-title">Drop or click to upload</div>
+            <div class="u-sub">PNG from IAM dataset or any handwriting photo</div>
+          </div>
+          <img id="imgPreview" src="" alt="preview" style="display:none">
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Task type <em style="font-weight:400;text-transform:none;letter-spacing:0">(sets expected cognitive demand)</em></div>
+        <div class="task-row">
+          <div class="task-btn active" data-task="copying" onclick="pickTask(this)">
+            <span class="tb-icon">&#128196;</span>
+            <span class="tb-name">Copying</span>
+            <span class="tb-sub">Low expected</span>
+          </div>
+          <div class="task-btn" data-task="memory" onclick="pickTask(this)">
+            <span class="tb-icon">&#129504;</span>
+            <span class="tb-name">Memory</span>
+            <span class="tb-sub">Medium expected</span>
+          </div>
+          <div class="task-btn" data-task="problem_solving" onclick="pickTask(this)">
+            <span class="tb-icon">&#10006;</span>
+            <span class="tb-name">Problem solving</span>
+            <span class="tb-sub">High expected</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="go-btn" id="goBtn" onclick="runAnalysis()" disabled>
+        Analyze Cognitive Load
+      </button>
+
+    </div>
+
+    <!-- RIGHT: results -->
+    <div class="right-col">
+
+      <div id="emptyState" class="empty-state">
+        <div style="font-size:44px;margin-bottom:10px">&#9998;</div>
+        Upload a handwriting image and click Analyze
+      </div>
+
+      <div id="results" style="display:none">
+
+        <!-- Load level -->
+        <div class="card result-header">
+          <div class="load-circle-wrap">
+            <div class="load-circle" id="loadCircle"></div>
+            <div>
+              <div class="load-title" id="loadTitle"></div>
+              <div class="load-sub" id="loadSub"></div>
+              <div class="load-status-line">
+                Task status: <span class="spill" id="statusPill"></span>
+                &nbsp; Expected: <strong id="expLoad"></strong>
+              </div>
+            </div>
+          </div>
+          <div class="conf-row">
+            <div class="conf-meta"><span>Model confidence</span><span id="confTxt" style="font-family:'IBM Plex Mono',monospace;font-weight:500"></span></div>
+            <div class="conf-track"><div class="conf-fill" id="confFill"></div></div>
+          </div>
+          <div class="prob-row" id="probRow"></div>
+        </div>
+
+        <!-- 4 Graphological feature group cards -->
+        <div class="feat-groups" id="featGroups"></div>
+
+        <!-- Insights -->
+        <div class="card">
+          <div class="card-label">Graphological insights</div>
+          <ul class="insights" id="insightsList"></ul>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /main-grid -->
+
+  <!-- History -->
+  <div class="history-wrap">
+    <div class="card-label" style="margin-bottom:8px">Recent predictions</div>
+    <div id="histArea" class="hist-empty">No predictions yet.</div>
+  </div>
+
+</main>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
