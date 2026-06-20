@@ -83,11 +83,3 @@ python app.py
                letter_height_var, pixel_entropy, zone_ratio
 
 ---
-
-## Viva Answer
-
-> "We extract 15 graphological features across four categories: pen pressure,
-> slant consistency, letter spacing, and form quality — all measurable markers
-> of motor degradation under cognitive load (Rosenblum et al., 2010).
-> A Random Forest/XGBoost classifier maps these to LOW/MEDIUM/HIGH load,
-> and a task-aware module flags anomalies against the expected task demand."
