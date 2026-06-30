@@ -267,13 +267,15 @@ def model_info():
     return jsonify(MODEL_INFO)
 
 
+init_db()
+
 if __name__ == '__main__':
-    init_db()
     print("\n🧠 Cognitive Load Estimation Server")
     print(f"   Model loaded : {MODEL is not None}")
     if MODEL_INFO:
         print(f"   Model        : {MODEL_INFO.get('model_name')}")
         print(f"   Accuracy     : {MODEL_INFO.get('accuracy')}")
         print(f"   Features     : {len(FEATURE_NAMES)} graphological")
-    print("   URL          : http://localhost:5000\n")
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    port = int(os.environ.get('PORT', 5000))
+    print(f"   URL          : http://localhost:{port}\n")
+    app.run(debug=False, host='0.0.0.0', port=port)

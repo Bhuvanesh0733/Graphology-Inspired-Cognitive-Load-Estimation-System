@@ -20,8 +20,6 @@ import warnings
 warnings.filterwarnings("ignore")
 
 
-# ── Preprocessing ─────────────────────────────────────────────────────────────
-
 def preprocess(image_path):
     """
     Load image → grayscale → denoise → binary (ink = 255).
